@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/auth/(.*)", "destination": "/api" },
+    { "source": "/users/(.*)", "destination": "/api" },
+    { "source": "/departments", "destination": "/api" },
+    { "source": "/departments/(.*)", "destination": "/api" },
+    { "source": "/issues", "destination": "/api" },
+    { "source": "/issues/(.*)", "destination": "/api" },
+    { "source": "/public/(.*)", "destination": "/api" },
+    { "source": "/notifications", "destination": "/api" },
+    { "source": "/notifications/(.*)", "destination": "/api" },
+    { "source": "/admin/(.*)", "destination": "/api" },
+    { "source": "/authority/(.*)", "destination": "/api" }
+  ]
+}

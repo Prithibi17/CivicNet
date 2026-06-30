@@ -16,8 +16,10 @@ import {
   IssueStatus
 } from './shared-types.js';
 
-const DB_FILE = path.join(process.cwd(), 'db.json');
+import os from 'os';
 
+const isVercel = process.env.VERCEL === '1';
+const DB_FILE = isVercel ? path.join(os.tmpdir(), 'db.json') : path.join(process.cwd(), 'db.json');
 export interface DatabaseSchema {
   users: User[];
   issues: Issue[];
@@ -674,6 +676,10 @@ export function writeDb(data: DatabaseSchema): void {
 
 export async function syncToFirestore(db: DatabaseSchema): Promise<void> {
   try {
+    if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+      console.log('Skipping Firebase sync in local dev without credentials.');
+      return;
+    }
     if (getApps().length === 0) {
       initializeApp({
         projectId: "gen-lang-client-0358631232"
@@ -718,6 +724,10 @@ export async function syncToFirestore(db: DatabaseSchema): Promise<void> {
 
 export async function initFirebaseSync(): Promise<void> {
   try {
+    if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+      console.log('Skipping Firebase init in local dev without credentials.');
+      return;
+    }
     if (getApps().length === 0) {
       initializeApp({
         projectId: "gen-lang-client-0358631232"

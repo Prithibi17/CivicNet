@@ -25,12 +25,14 @@ import {
   Media
 } from './src/shared-types.ts';
 
-async function startServer() {
+export const app = express();
+let isSetup = false;
+
+export async function setupApp() {
+  if (isSetup) return app;
+
   // Sync with Firestore before serving traffic
   await initFirebaseSync();
-
-  const app = express();
-  const PORT = 3000;
 
   app.use(express.json());
 
@@ -1410,13 +1412,13 @@ async function startServer() {
   });
 
   // Serve static files and mount Vite dev server in non-production
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa'
     });
     app.use(vite.middlewares);
-  } else {
+  } else if (!process.env.VERCEL) {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
@@ -1424,9 +1426,15 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+  isSetup = true;
+  return app;
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  setupApp().then(app => {
+    const PORT = process.env.PORT || 3000;
+    app.listen(Number(PORT), '0.0.0.0', () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  }).catch(console.error);
+}
