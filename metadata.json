@@ -1,0 +1,6 @@
+{
+  "name": "CivicNet",
+  "description": "Hyperlocal civic issue reporting and resolution platform with automated duplicate checking, AI prioritization, verification queues, and gamification.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
