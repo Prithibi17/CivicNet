@@ -1,6 +1,6 @@
-import { setupApp } from '../server.ts';
+import pkg from '../dist/server.cjs';
 
 export default async function handler(req: any, res: any) {
-  const app = await setupApp();
+  const app = await pkg.setupApp();
   return app(req, res);
 }
