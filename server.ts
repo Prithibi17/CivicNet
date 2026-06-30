@@ -36,6 +36,16 @@ export async function setupApp() {
 
   app.use(express.json());
 
+  // Strip /api prefix if present (for local dev and Vercel rewrites)
+  app.use((req, res, next) => {
+    if (req.url.startsWith('/api/')) {
+      req.url = req.url.substring(4);
+    } else if (req.url === '/api') {
+      req.url = '/';
+    }
+    next();
+  });
+
   // Simple authentication middleware using Authorization Header: "Bearer <user-id>"
   app.use((req, res, next) => {
     const authHeader = req.headers.authorization;

@@ -1,4 +1,4 @@
-import { setupApp } from '../server.js';
+import { setupApp } from '../server.ts';
 
 export default async function handler(req: any, res: any) {
   const app = await setupApp();

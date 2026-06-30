@@ -21,7 +21,7 @@ function getHeaders() {
 export const api = {
   // Auth
   async signup(data: any): Promise<{ user: User }> {
-    const res = await fetch(`/auth/signup`, {
+    const res = await fetch(`/api/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -34,7 +34,7 @@ export const api = {
   },
 
   async login(data: any): Promise<{ user: User }> {
-    const res = await fetch(`/auth/login`, {
+    const res = await fetch(`/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -47,7 +47,7 @@ export const api = {
   },
 
   async firebaseLogin(data: any): Promise<{ user: User }> {
-    const res = await fetch(`/auth/firebase-login`, {
+    const res = await fetch(`/api/auth/firebase-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -60,7 +60,7 @@ export const api = {
   },
 
   async forgotPassword(email: string): Promise<any> {
-    const res = await fetch(`/auth/forgot-password`, {
+    const res = await fetch(`/api/auth/forgot-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -69,7 +69,7 @@ export const api = {
   },
 
   async getMe(): Promise<{ user: User }> {
-    const res = await fetch(`/users/me`, {
+    const res = await fetch(`/api/users/me`, {
       headers: getHeaders()
     });
     if (!res.ok) throw new Error('Session expired');
@@ -77,7 +77,7 @@ export const api = {
   },
 
   async updateMe(data: any): Promise<{ user: User }> {
-    const res = await fetch(`/users/me`, {
+    const res = await fetch(`/api/users/me`, {
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify(data)
@@ -90,7 +90,7 @@ export const api = {
   },
 
   async getUser(id: string): Promise<{ user: Partial<User> }> {
-    const res = await fetch(`/users/${id}`, {
+    const res = await fetch(`/api/users/${id}`, {
       headers: getHeaders()
     });
     return res.json();
@@ -104,7 +104,7 @@ export const api = {
         query.append(key, String(val));
       }
     });
-    const res = await fetch(`/issues?${query.toString()}`, {
+    const res = await fetch(`/api/issues?${query.toString()}`, {
       headers: getHeaders()
     });
     return res.json();
@@ -117,7 +117,7 @@ export const api = {
     comments: any[];
     history: any[];
   }> {
-    const res = await fetch(`/issues/${id}`, {
+    const res = await fetch(`/api/issues/${id}`, {
       headers: getHeaders()
     });
     if (!res.ok) throw new Error('Issue not found');
@@ -135,7 +135,7 @@ export const api = {
       duplicateCandidates: any[];
     };
   }> {
-    const res = await fetch(`/issues`, {
+    const res = await fetch(`/api/issues`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data)
@@ -148,7 +148,7 @@ export const api = {
   },
 
   async attachMedia(issueId: string, url: string, type = 'image'): Promise<any> {
-    const res = await fetch(`/issues/${issueId}/media`, {
+    const res = await fetch(`/api/issues/${issueId}/media`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ url, type })
@@ -157,7 +157,7 @@ export const api = {
   },
 
   async verifyIssue(issueId: string, data: any): Promise<any> {
-    const res = await fetch(`/issues/${issueId}/verify`, {
+    const res = await fetch(`/api/issues/${issueId}/verify`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data)
@@ -170,7 +170,7 @@ export const api = {
   },
 
   async assignIssue(issueId: string, data: any): Promise<any> {
-    const res = await fetch(`/issues/${issueId}/assign`, {
+    const res = await fetch(`/api/issues/${issueId}/assign`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data)
@@ -186,7 +186,7 @@ export const api = {
     const payload = typeof statusOrData === 'string'
       ? { status: statusOrData, note }
       : statusOrData;
-    const res = await fetch(`/issues/${issueId}/status`, {
+    const res = await fetch(`/api/issues/${issueId}/status`, {
       method: 'PATCH',
       headers: getHeaders(),
       body: JSON.stringify(payload)
@@ -199,7 +199,7 @@ export const api = {
   },
 
   async confirmResolution(issueId: string): Promise<any> {
-    const res = await fetch(`/issues/${issueId}/confirm-resolution`, {
+    const res = await fetch(`/api/issues/${issueId}/confirm-resolution`, {
       method: 'POST',
       headers: getHeaders()
     });
@@ -211,7 +211,7 @@ export const api = {
   },
 
   async reopenIssue(issueId: string, note: string): Promise<any> {
-    const res = await fetch(`/issues/${issueId}/reopen`, {
+    const res = await fetch(`/api/issues/${issueId}/reopen`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ note })
@@ -225,14 +225,14 @@ export const api = {
 
   // Comments
   async getComments(issueId: string): Promise<{ comments: Comment[] }> {
-    const res = await fetch(`/issues/${issueId}/comments`, {
+    const res = await fetch(`/api/issues/${issueId}/comments`, {
       headers: getHeaders()
     });
     return res.json();
   },
 
   async addComment(issueId: string, content: string, attachmentUrl?: string): Promise<{ comment: Comment }> {
-    const res = await fetch(`/issues/${issueId}/comments`, {
+    const res = await fetch(`/api/issues/${issueId}/comments`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ content, attachmentUrl })
@@ -246,14 +246,14 @@ export const api = {
 
   // Notifications
   async getNotifications(): Promise<{ notifications: Notification[] }> {
-    const res = await fetch(`/notifications`, {
+    const res = await fetch(`/api/notifications`, {
       headers: getHeaders()
     });
     return res.json();
   },
 
   async readNotification(id: string): Promise<{ notification: Notification }> {
-    const res = await fetch(`/notifications/${id}/read`, {
+    const res = await fetch(`/api/notifications/${id}/read`, {
       method: 'PATCH',
       headers: getHeaders()
     });
@@ -262,14 +262,14 @@ export const api = {
 
   // Departments
   async getDepartments(): Promise<{ departments: Department[] }> {
-    const res = await fetch(`/departments`, {
+    const res = await fetch(`/api/departments`, {
       headers: getHeaders()
     });
     return res.json();
   },
 
   async updateDepartment(id: string, data: any): Promise<{ department: Department }> {
-    const res = await fetch(`/departments/${id}`, {
+    const res = await fetch(`/api/departments/${id}`, {
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify(data)
@@ -279,14 +279,14 @@ export const api = {
 
   // Analytics
   async getAnalyticsSummary(): Promise<any> {
-    const res = await fetch(`/analytics/summary`, {
+    const res = await fetch(`/api/analytics/summary`, {
       headers: getHeaders()
     });
     return res.json();
   },
 
   async getAnalyticsHotspots(): Promise<any> {
-    const res = await fetch(`/analytics/hotspots`, {
+    const res = await fetch(`/api/analytics/hotspots`, {
       headers: getHeaders()
     });
     return res.json();
@@ -294,7 +294,7 @@ export const api = {
 
   // Leaderboard
   async getLeaderboard(): Promise<any> {
-    const res = await fetch(`/leaderboard`, {
+    const res = await fetch(`/api/leaderboard`, {
       headers: getHeaders()
     });
     return res.json();
@@ -302,14 +302,14 @@ export const api = {
 
   // Admin
   async getAdminUsers(): Promise<{ users: User[] }> {
-    const res = await fetch(`/admin/users`, {
+    const res = await fetch(`/api/admin/users`, {
       headers: getHeaders()
     });
     return res.json();
   },
 
   async adminUpdateUser(id: string, data: any): Promise<any> {
-    const res = await fetch(`/admin/users/${id}`, {
+    const res = await fetch(`/api/admin/users/${id}`, {
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify(data)
@@ -318,7 +318,7 @@ export const api = {
   },
 
   async getAuditLogs(): Promise<{ auditLogs: AuditLog[] }> {
-    const res = await fetch(`/admin/audit-log`, {
+    const res = await fetch(`/api/admin/audit-log`, {
       headers: getHeaders()
     });
     return res.json();
@@ -326,7 +326,7 @@ export const api = {
 
   // Mapped/Convenience Helpers to resolve compilation mismatches
   async getProfile(userId: string): Promise<{ user: User }> {
-    const res = await fetch(`/users/${userId}`, {
+    const res = await fetch(`/api/users/${userId}`, {
       headers: getHeaders()
     });
     if (!res.ok) throw new Error('Failed to retrieve user profile');
@@ -338,13 +338,13 @@ export const api = {
   },
 
   async getPublicAuthorities(): Promise<{ authorities: any[] }> {
-    const res = await fetch(`/public/authorities`);
+    const res = await fetch(`/api/public/authorities`);
     if (!res.ok) throw new Error('Failed to fetch authorities list');
     return res.json();
   },
 
   async approveVerifier(userId: string, note?: string): Promise<any> {
-    const res = await fetch(`/authority/approve-verifier/${userId}`, {
+    const res = await fetch(`/api/authority/approve-verifier/${userId}`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ note })
@@ -361,7 +361,7 @@ export const api = {
   },
 
   async createDepartment(name: string, code: string): Promise<any> {
-    const res = await fetch(`/departments`, {
+    const res = await fetch(`/api/departments`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ name, code })
@@ -383,7 +383,7 @@ export const api = {
   },
 
   async verifyProgress(issueId: string, data: { progressPhotoUrl: string; notes?: string }): Promise<any> {
-    const res = await fetch(`/issues/${issueId}/verify-progress`, {
+    const res = await fetch(`/api/issues/${issueId}/verify-progress`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data)
